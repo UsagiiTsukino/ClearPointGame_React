@@ -134,8 +134,8 @@ function App() {
 
   // Auto Play
   const handleAutoPlay = () => {
-    if (autoPlaying || gameStatus !== "playing") return;
-    setAutoPlaying(true);
+    if (gameStatus !== "playing") return;
+    setAutoPlaying((prev) => !prev);
   };
 
   // Effect: mỗi khi autoPlaying và currentIndex thay đổi, tự động bấm tiếp nếu còn chơi
@@ -171,7 +171,7 @@ function App() {
         time={time}
         onStart={handleStart}
         onAutoPlay={handleAutoPlay}
-        showAutoPlay={gameStatus === "playing" && !autoPlaying}
+        autoPlaying={autoPlaying}
       />
       <PlayArea circles={circles} onCircleClick={handleCircleClick} />
       {gameStatus === "playing" && (

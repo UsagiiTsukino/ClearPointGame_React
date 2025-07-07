@@ -14,7 +14,7 @@ interface PlayAreaProps {
   onCircleClick: (index: number) => void;
 }
 
-const AREA_WIDTH = 400;
+// const AREA_WIDTH = 400;
 const AREA_HEIGHT = 300;
 
 function PlayArea({ circles, onCircleClick }: PlayAreaProps) {
@@ -46,4 +46,4 @@ function PlayArea({ circles, onCircleClick }: PlayAreaProps) {
   );
 }
 
-export default PlayArea; 
+export default PlayArea;

@@ -8,7 +8,7 @@ interface HeaderProps {
   time: number;
   onStart: () => void;
   onAutoPlay: () => void;
-  showAutoPlay: boolean;
+  autoPlaying: boolean;
 }
 
 function Header({
@@ -19,7 +19,7 @@ function Header({
   time,
   onStart,
   onAutoPlay,
-  showAutoPlay,
+  autoPlaying,
 }: HeaderProps) {
   let title = "LET'S PLAY";
   let titleColor = undefined;
@@ -52,7 +52,11 @@ function Header({
         <button onClick={onStart} disabled={!points}>
           {isRestart ? "Restart" : "Start"}
         </button>
-        {showAutoPlay && <button onClick={onAutoPlay}>Auto Play</button>}
+        {status === "playing" && (
+          <button onClick={onAutoPlay}>
+            {autoPlaying ? "Autoplay Off" : "Autoplay On"}
+          </button>
+        )}
       </div>
     </div>
   );

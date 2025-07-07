@@ -31,13 +31,19 @@ function Circle({ index, left, top, state, countdown, onClick }: CircleProps) {
         fontWeight: 600,
         fontSize: 14,
         userSelect: "none",
-        transition: "background 0.2s",
+        transition: "background 0.2s, opacity 0.2s",
         zIndex: 1,
+        opacity:
+          state === "active" && countdown !== undefined
+            ? Math.max(0, Math.min(1, countdown / 3))
+            : 1,
       }}
     >
-      {state === "active" && countdown !== undefined ? countdown.toFixed(1) : index + 1}
+      {state === "active" && countdown !== undefined
+        ? countdown.toFixed(1)
+        : index + 1}
     </div>
   );
 }
 
-export default Circle; 
+export default Circle;

@@ -25,6 +25,8 @@ function App() {
   const autoPlayRef = useRef(false);
   const currentIndexRef = useRef(currentIndex);
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
+  const circlesRef = useRef(circles);
+  useEffect(() => { circlesRef.current = circles; }, [circles]);
 
   // Timer effect
   useEffect(() => {
@@ -123,21 +125,22 @@ function App() {
   const handleAutoPlay = () => {
     if (autoPlaying || gameStatus !== "playing") return;
     setAutoPlaying(true);
-    autoPlayRef.current = true;
-    function autoStep() {
-      if (!autoPlayRef.current) return;
-      // Tìm index của vòng tròn có state 'normal' nhỏ nhất
-      const nextIdx = circles.findIndex(c => c.state === "normal");
-      if (nextIdx === -1 || gameStatus !== "playing") {
-        setAutoPlaying(false);
-        autoPlayRef.current = false;
-        return;
-      }
-      handleCircleClick(nextIdx);
-      setTimeout(autoStep, 400);
-    }
-    setTimeout(autoStep, 400);
   };
+
+  // Effect: mỗi khi autoPlaying và currentIndex thay đổi, tự động bấm tiếp nếu còn chơi
+  useEffect(() => {
+    if (!autoPlaying) return;
+    if (gameStatus !== "playing") return;
+    if (currentIndex >= circles.length) {
+      setAutoPlaying(false);
+      return;
+    }
+    // Bấm vào currentIndex
+    const timer = setTimeout(() => {
+      handleCircleClick(currentIndex);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [autoPlaying, currentIndex, gameStatus, circles.length]);
 
   // Khi win/gameover thì dừng auto play
   useEffect(() => {
@@ -160,6 +163,11 @@ function App() {
         showAutoPlay={gameStatus === "playing" && !autoPlaying}
       />
       <PlayArea circles={circles} onCircleClick={handleCircleClick} />
+      {gameStatus === "playing" && (
+        <div style={{ marginTop: 16, fontWeight: 500, fontSize: 18 }}>
+          Next: <span style={{ color: '#1976d2' }}>{currentIndex + 1}</span>
+        </div>
+      )}
     </div>
   );
 }

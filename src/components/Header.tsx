@@ -26,12 +26,13 @@ function Header({
   if (status === "gameover") {
     title = "GAME OVER";
     titleColor = "red";
+    
   }
   if (status === "win") {
     title = "YOU WIN";
     titleColor = "green";
   }
-  const isRestart = status === "playing" || status === "gameover" || status === "win";
+  const isRestart = status === "playing";
   return (
     <div style={{ marginBottom: 24 }}>
       <h1 style={{ color: titleColor }}>{title}</h1>

@@ -21,6 +21,10 @@ function App() {
   const [timerActive, setTimerActive] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [autoPlaying, setAutoPlaying] = useState(false);
+  const autoPlayRef = useRef(false);
+  const currentIndexRef = useRef(currentIndex);
+  useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
 
   // Timer effect
   useEffect(() => {
@@ -115,10 +119,33 @@ function App() {
     }
   }, [circles, gameStatus]);
 
-  // Auto Play (placeholder, sẽ làm sau)
+  // Auto Play
   const handleAutoPlay = () => {
-    // Sẽ cài đặt sau
+    if (autoPlaying || gameStatus !== "playing") return;
+    setAutoPlaying(true);
+    autoPlayRef.current = true;
+    function autoStep() {
+      if (!autoPlayRef.current) return;
+      // Tìm index của vòng tròn có state 'normal' nhỏ nhất
+      const nextIdx = circles.findIndex(c => c.state === "normal");
+      if (nextIdx === -1 || gameStatus !== "playing") {
+        setAutoPlaying(false);
+        autoPlayRef.current = false;
+        return;
+      }
+      handleCircleClick(nextIdx);
+      setTimeout(autoStep, 400);
+    }
+    setTimeout(autoStep, 400);
   };
+
+  // Khi win/gameover thì dừng auto play
+  useEffect(() => {
+    if (gameStatus === "win" || gameStatus === "gameover") {
+      setAutoPlaying(false);
+      autoPlayRef.current = false;
+    }
+  }, [gameStatus]);
 
   return (
     <div style={{ maxWidth: 500, margin: "0 auto", padding: 24 }}>
@@ -130,7 +157,7 @@ function App() {
         time={time}
         onStart={handleStart}
         onAutoPlay={handleAutoPlay}
-        showAutoPlay={gameStatus === "playing"}
+        showAutoPlay={gameStatus === "playing" && !autoPlaying}
       />
       <PlayArea circles={circles} onCircleClick={handleCircleClick} />
     </div>

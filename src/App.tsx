@@ -174,7 +174,7 @@ function App() {
         autoPlaying={autoPlaying}
       />
       <PlayArea circles={circles} onCircleClick={handleCircleClick} />
-      {gameStatus === "playing" && (
+      {gameStatus === "playing" && currentIndex < circles.length && (
         <div style={{ marginTop: 16, fontWeight: 500, fontSize: 18 }}>
           Next: <span style={{ color: "#1976d2" }}>{currentIndex + 1}</span>
         </div>

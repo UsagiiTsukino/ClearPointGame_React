@@ -17,7 +17,7 @@ interface PlayAreaProps {
 const AREA_WIDTH = 400;
 const AREA_HEIGHT = 300;
 
-const PlayArea: React.FC<PlayAreaProps> = ({ circles, onCircleClick }) => {
+function PlayArea({ circles, onCircleClick }: PlayAreaProps) {
   return (
     <div
       style={{
@@ -42,6 +42,6 @@ const PlayArea: React.FC<PlayAreaProps> = ({ circles, onCircleClick }) => {
       ))}
     </div>
   );
-};
+}
 
 export default PlayArea; 

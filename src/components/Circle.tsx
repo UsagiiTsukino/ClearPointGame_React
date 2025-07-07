@@ -9,7 +9,7 @@ interface CircleProps {
   onClick: () => void;
 }
 
-const Circle: React.FC<CircleProps> = ({ index, left, top, state, countdown, onClick }) => {
+function Circle({ index, left, top, state, countdown, onClick }: CircleProps) {
   if (state === "hidden") return null;
   return (
     <div
@@ -38,6 +38,6 @@ const Circle: React.FC<CircleProps> = ({ index, left, top, state, countdown, onC
       {state === "active" && countdown !== undefined ? countdown.toFixed(1) : index + 1}
     </div>
   );
-};
+}
 
 export default Circle; 

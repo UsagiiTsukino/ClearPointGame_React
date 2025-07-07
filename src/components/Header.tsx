@@ -11,7 +11,7 @@ interface HeaderProps {
   showAutoPlay: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({
+function Header({
   status,
   points,
   inputPoints,
@@ -20,14 +20,18 @@ const Header: React.FC<HeaderProps> = ({
   onStart,
   onAutoPlay,
   showAutoPlay,
-}) => {
+}: HeaderProps) {
   let title = "LET'S PLAY";
   let titleColor = undefined;
-  if (status === "gameover") title = "GAME OVER";
+  if (status === "gameover") {
+    title = "GAME OVER";
+    titleColor = "red";
+  }
   if (status === "win") {
     title = "YOU WIN";
     titleColor = "green";
   }
+  const isRestart = status === "playing" || status === "gameover" || status === "win";
   return (
     <div style={{ marginBottom: 24 }}>
       <h1 style={{ color: titleColor }}>{title}</h1>
@@ -45,13 +49,13 @@ const Header: React.FC<HeaderProps> = ({
       </div>
       <div style={{ marginTop: 8 }}>Time: {time.toFixed(1)}s</div>
       <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-        <button onClick={onStart} disabled={status === "playing" || !points}>Start</button>
+        <button onClick={onStart} disabled={!points}>{isRestart ? "Restart" : "Start"}</button>
         {showAutoPlay && (
           <button onClick={onAutoPlay}>Auto Play</button>
         )}
       </div>
     </div>
   );
-};
+}
 
 export default Header; 

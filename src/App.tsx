@@ -12,7 +12,7 @@ const getRandomPosition = () => {
   return { left, top };
 };
 
-const App: React.FC = () => {
+function App() {
   const [inputPoints, setInputPoints] = useState("");
   const [points, setPoints] = useState(0);
   const [circles, setCircles] = useState<CircleData[]>([]);
@@ -44,7 +44,7 @@ const App: React.FC = () => {
     else setPoints(0);
   };
 
-  // Start game
+  // Start hoặc Restart game
   const handleStart = () => {
     if (!points) return;
     // Generate random circles
@@ -74,31 +74,33 @@ const App: React.FC = () => {
   // Handle click circle
   const handleCircleClick = (i: number) => {
     if (gameStatus !== "playing") return;
+    // Chỉ cho phép bấm đúng thứ tự tiếp theo (index = currentIndex)
     if (i !== currentIndex) {
       setGameStatus("gameover");
       setTimerActive(false);
       return;
     }
-    // Đánh dấu active, bắt đầu đếm ngược 3s
+    // Đánh dấu vòng tròn này là active, bắt đầu đếm ngược 3s
     setCircles(prev =>
       prev.map((c, idx) =>
         idx === i ? { ...c, state: "active", countdown: 3.0 } : c
       )
     );
+    // Tăng currentIndex để cho phép bấm tiếp vòng tròn tiếp theo
     setCurrentIndex(idx => idx + 1);
   };
 
-  // Countdown effect cho circle active
+  // Countdown effect cho tất cả các circle active
   useEffect(() => {
     if (gameStatus !== "playing") return;
-    const activeIdx = circles.findIndex(c => c.state === "active");
-    if (activeIdx === -1) return;
+    // Nếu không có circle nào active thì không cần setInterval
+    if (!circles.some(c => c.state === "active")) return;
     const interval = setInterval(() => {
       setCircles(prev =>
-        prev.map((c, idx) => {
-          if (idx !== activeIdx || c.state !== "active" || c.countdown === undefined) return c;
-          if (c.countdown! <= 0.1) return { ...c, state: "hidden" };
-          return { ...c, countdown: +(c.countdown! - 0.1).toFixed(1) };
+        prev.map((c) => {
+          if (c.state !== "active" || c.countdown === undefined) return c;
+          if (c.countdown <= 0.1) return { ...c, state: "hidden" };
+          return { ...c, countdown: +(c.countdown - 0.1).toFixed(1) };
         })
       );
     }, 100);
@@ -112,15 +114,6 @@ const App: React.FC = () => {
       setTimerActive(false);
     }
   }, [circles, gameStatus]);
-
-  // Restart game
-  const handleRestart = () => {
-    setGameStatus("ready");
-    setCircles([]);
-    setTime(0);
-    setTimerActive(false);
-    setCurrentIndex(0);
-  };
 
   // Auto Play (placeholder, sẽ làm sau)
   const handleAutoPlay = () => {
@@ -140,13 +133,8 @@ const App: React.FC = () => {
         showAutoPlay={gameStatus === "playing"}
       />
       <PlayArea circles={circles} onCircleClick={handleCircleClick} />
-      {(gameStatus === "gameover" || gameStatus === "win") && (
-        <div style={{ marginTop: 24 }}>
-          <button onClick={handleRestart}>Restart</button>
-        </div>
-      )}
     </div>
   );
-};
+}
 
 export default App;

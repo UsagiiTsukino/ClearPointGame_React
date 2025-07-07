@@ -26,10 +26,9 @@ function Header({
   if (status === "gameover") {
     title = "GAME OVER";
     titleColor = "red";
-    
   }
   if (status === "win") {
-    title = "YOU WIN";
+    title = "ALL CLEARED";
     titleColor = "green";
   }
   const isRestart = status === "playing";
@@ -43,20 +42,20 @@ function Header({
           min={1}
           max={99}
           value={inputPoints}
-          onChange={e => onPointsChange(e.target.value)}
+          onChange={(e) => onPointsChange(e.target.value)}
           disabled={status === "playing"}
           style={{ width: 60 }}
         />
       </div>
       <div style={{ marginTop: 8 }}>Time: {time.toFixed(1)}s</div>
       <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-        <button onClick={onStart} disabled={!points}>{isRestart ? "Restart" : "Start"}</button>
-        {showAutoPlay && (
-          <button onClick={onAutoPlay}>Auto Play</button>
-        )}
+        <button onClick={onStart} disabled={!points}>
+          {isRestart ? "Restart" : "Start"}
+        </button>
+        {showAutoPlay && <button onClick={onAutoPlay}>Auto Play</button>}
       </div>
     </div>
   );
 }
 
-export default Header; 
+export default Header;

@@ -16,7 +16,9 @@ function App() {
   const [inputPoints, setInputPoints] = useState("");
   const [points, setPoints] = useState(0);
   const [circles, setCircles] = useState<CircleData[]>([]);
-  const [gameStatus, setGameStatus] = useState<"ready" | "playing" | "gameover" | "win">("ready");
+  const [gameStatus, setGameStatus] = useState<
+    "ready" | "playing" | "gameover" | "win"
+  >("ready");
   const [time, setTime] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,15 +26,19 @@ function App() {
   const [autoPlaying, setAutoPlaying] = useState(false);
   const autoPlayRef = useRef(false);
   const currentIndexRef = useRef(currentIndex);
-  useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
   const circlesRef = useRef(circles);
-  useEffect(() => { circlesRef.current = circles; }, [circles]);
+  useEffect(() => {
+    circlesRef.current = circles;
+  }, [circles]);
 
   // Timer effect
   useEffect(() => {
     if (timerActive) {
       timerRef.current = setInterval(() => {
-        setTime(t => +(t + 0.1).toFixed(1));
+        setTime((t) => +(t + 0.1).toFixed(1));
       }, 100);
     } else if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -46,7 +52,7 @@ function App() {
   const handlePointsChange = (val: string) => {
     setInputPoints(val);
     const n = parseInt(val, 10);
-    if (!isNaN(n) && n > 0 && n <= 99) setPoints(n);
+    if (!isNaN(n) && n > 0 && n <= 99999) setPoints(n);
     else setPoints(0);
   };
 
@@ -63,10 +69,11 @@ function App() {
         tries++;
       } while (
         arr.some(
-          c =>
+          (c) =>
             Math.abs(c.left - pos.left) < CIRCLE_SIZE &&
             Math.abs(c.top - pos.top) < CIRCLE_SIZE
-        ) && tries < 100
+        ) &&
+        tries < 100
       );
       arr.push({ index: i, left: pos.left, top: pos.top, state: "normal" });
     }
@@ -87,22 +94,22 @@ function App() {
       return;
     }
     // Đánh dấu vòng tròn này là active, bắt đầu đếm ngược 3s
-    setCircles(prev =>
+    setCircles((prev) =>
       prev.map((c, idx) =>
         idx === i ? { ...c, state: "active", countdown: 3.0 } : c
       )
     );
     // Tăng currentIndex để cho phép bấm tiếp vòng tròn tiếp theo
-    setCurrentIndex(idx => idx + 1);
+    setCurrentIndex((idx) => idx + 1);
   };
 
   // Countdown effect cho tất cả các circle active
   useEffect(() => {
     if (gameStatus !== "playing") return;
     // Nếu không có circle nào active thì không cần setInterval
-    if (!circles.some(c => c.state === "active")) return;
+    if (!circles.some((c) => c.state === "active")) return;
     const interval = setInterval(() => {
-      setCircles(prev =>
+      setCircles((prev) =>
         prev.map((c) => {
           if (c.state !== "active" || c.countdown === undefined) return c;
           if (c.countdown <= 0.1) return { ...c, state: "hidden" };
@@ -115,7 +122,11 @@ function App() {
 
   // Check win
   useEffect(() => {
-    if (gameStatus === "playing" && circles.length > 0 && circles.every(c => c.state === "hidden")) {
+    if (
+      gameStatus === "playing" &&
+      circles.length > 0 &&
+      circles.every((c) => c.state === "hidden")
+    ) {
       setGameStatus("win");
       setTimerActive(false);
     }
@@ -165,7 +176,7 @@ function App() {
       <PlayArea circles={circles} onCircleClick={handleCircleClick} />
       {gameStatus === "playing" && (
         <div style={{ marginTop: 16, fontWeight: 500, fontSize: 18 }}>
-          Next: <span style={{ color: '#1976d2' }}>{currentIndex + 1}</span>
+          Next: <span style={{ color: "#1976d2" }}>{currentIndex + 1}</span>
         </div>
       )}
     </div>

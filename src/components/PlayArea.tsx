@@ -22,11 +22,13 @@ function PlayArea({ circles, onCircleClick }: PlayAreaProps) {
     <div
       style={{
         position: "relative",
-        width: AREA_WIDTH,
+        width: "100%",
+        maxWidth: 500,
         height: AREA_HEIGHT,
         border: "2px solid #333",
         margin: "0 auto",
         background: "#fafafa",
+        boxSizing: "border-box",
       }}
     >
       {circles.map((circle, i) => (
